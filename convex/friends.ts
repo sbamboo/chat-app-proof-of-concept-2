@@ -16,6 +16,11 @@ export const sendFriendRequest = mutation({
       .unique();
     if (!sender) throw new Error("Sender not found");
 
+    // Prevent sending request to yourself
+    if (sender.username === args.recipientUsername) {
+      throw new Error("Cannot send friend request to yourself");
+    }
+
     // Get recipient's user ID
     const recipient = await ctx.db
       .query("usermeta")
